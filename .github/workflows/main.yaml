@@ -43,6 +43,7 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
+          openai-api-key: ${{ secrets.OPENAI_API_KEY }}
 
       - name: Login to Amazon ECR
         id: login-ecr
@@ -89,14 +90,12 @@ jobs:
          
       # - name: Stop and remove  container if running
       #   run: |
-      #    docker ps -q --filter "name=mltest" | grep -q . && docker stop mltest && docker rm -fv mltest   
-       
+      #    docker ps -q --filter "name=mltest" | grep -q . && docker stop mltest && docker rm -fv mltest
+
       - name: Run Docker Image to serve users
-        env:            
-            OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: |
          echo "OPENAI_API_KEY=$OPENAI_API_KEY" > .env
-         docker run -d -p 80:8501 --ipc="host" --name=test1 -e 'AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}' -e 'AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}' -e 'AWS_REGION=${{ secrets.AWS_REGION }}'  ${{secrets.AWS_ECR_LOGIN_URI}}/${{ secrets.ECR_REPOSITORY_NAME }}:latest
+         docker run -d -p 80:8501 --ipc="host" --name=test3 -e 'OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}' -e 'AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}' -e 'AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}' -e 'AWS_REGION=${{ secrets.AWS_REGION }}'  ${{secrets.AWS_ECR_LOGIN_URI}}/${{ secrets.ECR_REPOSITORY_NAME }}:latest
       - name: Clean previous images and containers
         run: |
          docker system prune -f
