@@ -9,8 +9,8 @@ from langchain.document_loaders import UnstructuredURLLoader
 from langchain.embeddings import OpenAIEmbeddings
 from langchain.vectorstores import FAISS
 
-from dotenv import load_dotenv
-load_dotenv()  # take environment variables from .env (especially openai api key)
+# from dotenv import load_dotenv
+# load_dotenv()  # take environment variables from .env (especially openai api key)
 
 st.title("Edgar's News Bot: News Research Tool 📈")
 st.sidebar.title("News Article URLs")
@@ -65,4 +65,4 @@ if query:
                 st.subheader("Sources:")
                 sources_list = sources.split("\n")  # Split the sources by newline
                 for source in sources_list:
-                    st.write(source)(base)
+                    st.write(source)
