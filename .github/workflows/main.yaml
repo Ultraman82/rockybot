@@ -43,7 +43,6 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
-          openai-api-key: ${{ secrets.OPENAI_API_KEY }}
 
       - name: Login to Amazon ECR
         id: login-ecr
@@ -55,7 +54,6 @@ jobs:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY_NAME }}
           IMAGE_TAG: latest
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: |
           # Build a docker container and
           # push it to ECR so that it can
@@ -78,10 +76,13 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
+          openai-api-key: ${{ secrets.OPENAI_API_KEY }}
+
 
       - name: Login to Amazon ECR
         id: login-ecr
-        uses: aws-actions/amazon-ecr-login@v1      
+        uses: aws-actions/amazon-ecr-login@v1
+      
       
       - name: Pull latest images
         run: |
@@ -90,10 +91,10 @@ jobs:
       # - name: Stop and remove  container if running
       #   run: |
       #    docker ps -q --filter "name=mltest" | grep -q . && docker stop mltest && docker rm -fv mltest
-
+       
       - name: Run Docker Image to serve users
-        run: |         
-         docker run -d -p 80:8501 --ipc="host" --name=test2 -e 'OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}' -e 'AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}' -e 'AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}' -e 'AWS_REGION=${{ secrets.AWS_REGION }}'  ${{secrets.AWS_ECR_LOGIN_URI}}/${{ secrets.ECR_REPOSITORY_NAME }}:latest
+        run: |
+         docker run -d -p 80:8501 --ipc="host" --name=mltest -e 'OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}' -e 'AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}' -e 'AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}' -e 'AWS_REGION=${{ secrets.AWS_REGION }}'  ${{secrets.AWS_ECR_LOGIN_URI}}/${{ secrets.ECR_REPOSITORY_NAME }}:latest
       - name: Clean previous images and containers
         run: |
          docker system prune -f
