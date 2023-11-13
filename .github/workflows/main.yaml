@@ -90,7 +90,7 @@ jobs:
          
       - name: Stop and remove  container if running
         run: |
-        docker ps -q --filter "name=rockybot" | grep -q . && docker stop rockybot && docker rm -fv rockybot
+         docker ps -q --filter "name=rockybot" | grep -q . && docker stop rockybot && docker rm -fv rockybot
        
       - name: Run Docker Image to serve users
         run: |
