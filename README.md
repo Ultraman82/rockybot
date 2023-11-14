@@ -5,6 +5,7 @@ RockyBot is a user-friendly news research tool designed for effortless informati
 
 ![](rockybot.png)
 
+[Live Link on AWS ECR/EC2](http://ec2-54-173-211-92.compute-1.amazonaws.com)
 ## Features
 
 - Load URLs or upload text files containing URLs to fetch article content.
